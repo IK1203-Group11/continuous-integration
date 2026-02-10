@@ -40,6 +40,29 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
         response.setContentType("text/html;charset=utf-8");
         baseRequest.setHandled(true);
+        
+        // Log endpoint for GitHub "Details" link:
+        // When the commit status includes a target_url like https://<public-url>/build/<buildId>,
+        // GitHub will open that URL when the user clicks "Details".
+        // This handler serves the stored log file for a specific build id at:
+        //   GET /build/<buildId>  ->  builds/<buildId>/log.txt
+        if ("GET".equalsIgnoreCase(request.getMethod()) && target.startsWith("/build/")) {
+            String id = target.substring("/build/".length());
+            java.nio.file.Path logPath = java.nio.file.Paths.get("builds", id, "log.txt");
+
+            response.setContentType("text/plain;charset=utf-8");
+            baseRequest.setHandled(true);
+
+            if (!java.nio.file.Files.exists(logPath)) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().println("No log for buildId=" + id);
+                return;
+            }
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().println(java.nio.file.Files.readString(logPath));
+            return;
+        }
 
         // GitHub webhooks will be POST requests with a JSON body
         if (!"POST".equalsIgnoreCase(request.getMethod())) {

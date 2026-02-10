@@ -65,10 +65,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             System.out.println("Commit: " + trigger.commitSha);
             System.out.println("Clone URL: " + trigger.cloneUrl);
 
-            // DO ALL CI TASKS HERE
-            // Clone repo,
-            // checkout branch,
-            // compile code, run tests...
+            // Run the tests on related branch and produce the result of tests.
+            BuildExecutor executor = new BuildExecutor();
+            boolean result = executor.runBuild(trigger.cloneUrl, trigger.branch);
+            System.out.println(result ? "Tests passed." : "Tests failed.");
+
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().println("Parsed branch=" + trigger.branch + " sha=" + trigger.commitSha);

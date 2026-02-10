@@ -108,7 +108,8 @@ public class ContinuousIntegrationServer extends AbstractHandler {
                     System.out.println("[NOTIFY] repository.full_name missing; cannot set commit status.");
                 } else {
                     GitHubStatusNotifier notifier = new GitHubStatusNotifier();
-                    notifier.setStatus(fullName, trigger.commitSha, result, result ? "build and tests passed" : "build or tests failed");
+                    String buildId = executor.getLastBuildId();
+                    notifier.setStatus(fullName, trigger.commitSha, result, result ? "build and tests passed" : "build or tests failed", buildId);
                 }
             } catch (Exception e) {
                 System.out.println("[NOTIFY] warning: could not set commit status: " + e.getMessage());

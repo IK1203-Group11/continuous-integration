@@ -1,13 +1,17 @@
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-import org.eclipse.jetty.server.Server;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 /**
  * Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -15,6 +19,8 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  */
 public class ContinuousIntegrationServer extends AbstractHandler {
     private final GitHubPayloadParser payloadParser = new GitHubPayloadParser();
+    
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * Called when a request is received.
@@ -65,11 +71,25 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             System.out.println("Commit: " + trigger.commitSha);
             System.out.println("Clone URL: " + trigger.cloneUrl);
 
+            JsonNode root = MAPPER.readTree(body);
+            String fullName = root.path("repository").path("full_name").asText("");
+            System.out.println("Repo full_name: " + fullName);
+
             // Run the tests on related branch and produce the result of tests.
             BuildExecutor executor = new BuildExecutor();
             boolean result = executor.runBuild(trigger.cloneUrl, trigger.branch);
             System.out.println(result ? "Tests passed." : "Tests failed.");
 
+            try {
+                if (fullName.isBlank()) {
+                    System.out.println("[NOTIFY] repository.full_name missing; cannot set commit status.");
+                } else {
+                    GitHubStatusNotifier notifier = new GitHubStatusNotifier();
+                    notifier.setStatus(fullName, trigger.commitSha, result, result ? "build and tests passed" : "build or tests failed");
+                }
+            } catch (Exception e) {
+                System.out.println("[NOTIFY] warning: could not set commit status: " + e.getMessage());
+            }
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().println("Parsed branch=" + trigger.branch + " sha=" + trigger.commitSha);

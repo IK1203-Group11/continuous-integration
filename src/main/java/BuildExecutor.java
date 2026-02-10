@@ -1,5 +1,9 @@
-import java.io.*;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * This class is responsible for executing the core CI build steps.
@@ -44,15 +48,26 @@ public class BuildExecutor {
                 repoDir
         );
 
+
         // 5. Run Maven tests.
         // Maven returns exit code 0 on success, non-zero on failure.
+        String mvnCmd;
+        if (Files.exists(repoDir.toPath().resolve(isWindows() ? "mvnw.cmd" : "mvnw"))) {
+            mvnCmd = isWindows() ? "mvnw.cmd" : "./mvnw";
+        } else {
+            mvnCmd = isWindows() ? "mvn.cmd" : "mvn";
+        }
+
         int exitCode = runCommand(
-                new String[]{"mvn", "test"},
+                new String[]{mvnCmd, "test"},
                 repoDir
         );
 
         // Return true only if the build was successful.
         return exitCode == 0;
+    }
+    private boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("win");
     }
 
     /**

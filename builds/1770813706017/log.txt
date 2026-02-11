@@ -1,0 +1,162 @@
+[BUILD] Cloning into 'continuous-integration'...
+exitCode=0
+[BUILD] branch 'issue/6' set up to track 'origin/issue/6'.
+[BUILD] Switched to a new branch 'issue/6'
+exitCode=0
+[BUILD] [INFO] Scanning for projects...
+[BUILD] [INFO] 
+[BUILD] [INFO] ----------------< se.kth.dd2480:continuous-integration >----------------
+[BUILD] [INFO] Building continuous-integration 1.0-SNAPSHOT
+[BUILD] [INFO]   from pom.xml
+[BUILD] [INFO] --------------------------------[ jar ]---------------------------------
+[BUILD] [INFO] 
+[BUILD] [INFO] --- resources:3.3.1:resources (default-resources) @ continuous-integration ---
+[BUILD] [INFO] skip non existing resourceDirectory C:\Users\moham\AppData\Local\Temp\ci-build-2150602669502591641\continuous-integration\src\main\resources
+[BUILD] [INFO] 
+[BUILD] [INFO] --- compiler:3.11.0:compile (default-compile) @ continuous-integration ---
+[BUILD] [INFO] Changes detected - recompiling the module! :source
+[BUILD] [INFO] Compiling 4 source files with javac [debug target 11] to target\classes
+[BUILD] [INFO] -------------------------------------------------------------
+[BUILD] [WARNING] COMPILATION WARNING : 
+[BUILD] [INFO] -------------------------------------------------------------
+[BUILD] [WARNING] system modules path not set in conjunction with -source 11
+[BUILD] [INFO] 1 warning
+[BUILD] [INFO] -------------------------------------------------------------
+[BUILD] [INFO] -------------------------------------------------------------
+[BUILD] [ERROR] COMPILATION ERROR : 
+[BUILD] [INFO] -------------------------------------------------------------
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[1,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[3,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[4,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[5,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[6,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[8,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[9,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[10,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[11,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[12,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[13,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[25,1] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[25,13] > expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[27,5] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[28,1] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[31,1] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[31,13] <identifier> expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[61,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[61,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[61,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[63,9] > or ',' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[64,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[64,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[64,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[64,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[78,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[78,4] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[78,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[78,13] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[127,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[127,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[127,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[128,1] > or ',' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[128,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[128,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[128,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[129,13] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[156,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[156,4] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[156,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[156,13] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[189,1] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[189,13] > expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[192,5] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[192,77] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[194,65] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[216,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[216,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[216,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[217,17] > or ',' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[220,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[220,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[220,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[220,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[221,23] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[227,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[227,4] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[227,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[227,13] ';' expected
+[BUILD] [INFO] 59 errors 
+[BUILD] [INFO] -------------------------------------------------------------
+[BUILD] [INFO] ------------------------------------------------------------------------
+[BUILD] [INFO] BUILD FAILURE
+[BUILD] [INFO] ------------------------------------------------------------------------
+[BUILD] [INFO] Total time:  3.159 s
+[BUILD] [INFO] Finished at: 2026-02-11T13:41:54+01:00
+[BUILD] [INFO] ------------------------------------------------------------------------
+[BUILD] [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project continuous-integration: Compilation failure: Compilation failure: 
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[1,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[3,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[4,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[5,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[6,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[8,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[9,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[10,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[11,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[12,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[13,1] class, interface, or enum expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[25,1] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[25,13] > expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[27,5] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[28,1] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[31,1] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[31,13] <identifier> expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[61,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[61,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[61,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[63,9] > or ',' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[64,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[64,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[64,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[64,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[78,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[78,4] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[78,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[78,13] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[127,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[127,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[127,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[128,1] > or ',' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[128,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[128,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[128,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[129,13] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[156,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[156,4] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[156,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[156,13] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[189,1] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[189,13] > expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[192,5] illegal start of type
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[192,77] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[194,65] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[216,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[216,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[216,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[217,17] > or ',' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[220,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[220,3] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[220,5] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[220,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[221,23] ';' expected
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[227,1] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[227,4] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[227,7] illegal start of expression
+[BUILD] [ERROR] /C:/Users/moham/AppData/Local/Temp/ci-build-2150602669502591641/continuous-integration/src/main/java/BuildExecutor.java:[227,13] ';' expected
+[BUILD] [ERROR] -> [Help 1]
+[BUILD] [ERROR] 
+[BUILD] [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[BUILD] [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[BUILD] [ERROR] 
+[BUILD] [ERROR] For more information about the errors and possible solutions, please read the following articles:
+[BUILD] [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+exitCode=1

@@ -121,11 +121,21 @@ The notification logic is verified in `GitHubStatusNotifierTest.java` using a "s
 * **Environment Awareness**: Uses `Assume.assumeTrue` to skip tests that might trigger real HTTP calls if a production token is detected in the local environment.
 ---
 
-## Documentation & generation 
+## Documentation & generation
 
+The project utilizes **Javadoc** to maintain formal technical documentation of the CI server's internal architecture, utility classes, and API endpoints.
 
+### 1. Generating Javadoc
+Documentation generation is automated via the `maven-javadoc-plugin`. To generate the HTML documentation set, execute the following command in your terminal:
 
----
+```bash
+mvn javadoc:javadoc
+```
+
+### 2. View Javadoc
+
+* **Location**: The generated HTML files are stored in the target/site/apidocs/ directory. 
+* **Entry Point**: Open index.html in any web browser to explore the class hierarchies, method descriptions, and parameter requirements. 
 
 
 ## Contribution 

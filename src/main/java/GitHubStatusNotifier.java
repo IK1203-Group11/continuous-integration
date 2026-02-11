@@ -70,9 +70,15 @@ public class GitHubStatusNotifier {
      *   CI_PUBLIC_URL + "/build/" + buildId
      *
      * Requires environment variable:
-     *   CI_PUBLIC_URL = https://<your-ngrok-url> (or any public base URL to this CI server)
+     *   CI_PUBLIC_URL = https://your-ngrok-url (or any public base URL)
      *
      * If CI_PUBLIC_URL is not set (or invalid), it falls back to the normal status without target_url.
+     * @param fullName the owner/repo string
+     * @param sha the commit hash
+     * @param success the build result
+     * @param description status message
+     * @param buildId the unique build identifier
+     * @throws Exception if the HTTP request fails
      */
     public void setStatus(String fullName, String sha, boolean success, String description, String buildId) throws Exception {
         String publicBase = System.getenv("CI_PUBLIC_URL");

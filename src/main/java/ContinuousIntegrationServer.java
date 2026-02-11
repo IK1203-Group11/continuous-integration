@@ -1,19 +1,18 @@
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.stream.Collectors;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import java.nio.file.*;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -21,8 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ContinuousIntegrationServer extends AbstractHandler {
     private final GitHubPayloadParser payloadParser = new GitHubPayloadParser();
-    
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * Called when a request is received.
@@ -190,21 +187,6 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             boolean result = executor.runBuild(trigger.cloneUrl, trigger.branch);
             System.out.println(result ? "Tests passed." : "Tests failed.");
 
-            JsonNode root = MAPPER.readTree(body);
-            String fullName = root.path("repository").path("full_name").asText("");
-            System.out.println("Repo full_name: " + fullName);
-
-            try {
-                if (fullName.isBlank()) {
-                    System.out.println("[NOTIFY] repository.full_name missing; cannot set commit status.");
-                } else {
-                    GitHubStatusNotifier notifier = new GitHubStatusNotifier();
-                    String buildId = executor.getLastBuildId();
-                    notifier.setStatus(fullName, trigger.commitSha, result, result ? "build and tests passed" : "build or tests failed", buildId);
-                }
-            } catch (Exception e) {
-                System.out.println("[NOTIFY] warning: could not set commit status: " + e.getMessage());
-            }
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().println("Parsed branch=" + trigger.branch + " sha=" + trigger.commitSha);

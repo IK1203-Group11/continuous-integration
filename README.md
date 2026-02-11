@@ -111,6 +111,14 @@ This section details how the server fulfills the core requirements for compilati
 * **Deep Linking (Details Link)**: If a `CI_PUBLIC_URL` is configured, the notification includes a `target_url` that creates a "Details" button in the GitHub UI.
 * **Log Accessibility**: Clicking "Details" redirects the developer to the CI server's log endpoint (`/build/<buildId>`), allowing for immediate inspection of build logs.
 
+
+
+##### Unit Testing the Notification
+The notification logic is verified in `GitHubStatusNotifierTest.java` using a "safe behavior" strategy to ensure reliability without making real network calls:
+* **Console Capture**: The tests use `ByteArrayOutputStream` to capture and verify `System.out` log messages produced by the notifier.
+* **Safe Execution**: Tests verify that the system handles missing environment variables (like `GITHUB_TOKEN`) gracefully without throwing exceptions.
+* **Input Validation**: Unit tests exercise early-return paths for invalid data, such as improperly formatted repository names or missing commit SHAs.
+* **Environment Awareness**: Uses `Assume.assumeTrue` to skip tests that might trigger real HTTP calls if a production token is detected in the local environment.
 ---
 
 ## Documentation & generation 

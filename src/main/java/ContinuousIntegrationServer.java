@@ -1,13 +1,17 @@
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-import org.eclipse.jetty.server.Server;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 /**
  * Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -15,6 +19,8 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  */
 public class ContinuousIntegrationServer extends AbstractHandler {
     private final GitHubPayloadParser payloadParser = new GitHubPayloadParser();
+    
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * Called when a request is received.
@@ -34,6 +40,29 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
         response.setContentType("text/html;charset=utf-8");
         baseRequest.setHandled(true);
+        
+        // Log endpoint for GitHub "Details" link:
+        // When the commit status includes a target_url like https://<public-url>/build/<buildId>,
+        // GitHub will open that URL when the user clicks "Details".
+        // This handler serves the stored log file for a specific build id at:
+        //   GET /build/<buildId>  ->  builds/<buildId>/log.txt
+        if ("GET".equalsIgnoreCase(request.getMethod()) && target.startsWith("/build/")) {
+            String id = target.substring("/build/".length());
+            java.nio.file.Path logPath = java.nio.file.Paths.get("builds", id, "log.txt");
+
+            response.setContentType("text/plain;charset=utf-8");
+            baseRequest.setHandled(true);
+
+            if (!java.nio.file.Files.exists(logPath)) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().println("No log for buildId=" + id);
+                return;
+            }
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().println(java.nio.file.Files.readString(logPath));
+            return;
+        }
 
         // GitHub webhooks will be POST requests with a JSON body
         if (!"POST".equalsIgnoreCase(request.getMethod())) {
@@ -65,11 +94,26 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             System.out.println("Commit: " + trigger.commitSha);
             System.out.println("Clone URL: " + trigger.cloneUrl);
 
+            JsonNode root = MAPPER.readTree(body);
+            String fullName = root.path("repository").path("full_name").asText("");
+            System.out.println("Repo full_name: " + fullName);
+
             // Run the tests on related branch and produce the result of tests.
             BuildExecutor executor = new BuildExecutor();
             boolean result = executor.runBuild(trigger.cloneUrl, trigger.branch);
             System.out.println(result ? "Tests passed." : "Tests failed.");
 
+            try {
+                if (fullName.isBlank()) {
+                    System.out.println("[NOTIFY] repository.full_name missing; cannot set commit status.");
+                } else {
+                    GitHubStatusNotifier notifier = new GitHubStatusNotifier();
+                    String buildId = executor.getLastBuildId();
+                    notifier.setStatus(fullName, trigger.commitSha, result, result ? "build and tests passed" : "build or tests failed", buildId);
+                }
+            } catch (Exception e) {
+                System.out.println("[NOTIFY] warning: could not set commit status: " + e.getMessage());
+            }
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().println("Parsed branch=" + trigger.branch + " sha=" + trigger.commitSha);

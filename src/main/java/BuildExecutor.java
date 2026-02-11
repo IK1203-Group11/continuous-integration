@@ -1,5 +1,9 @@
-import java.io.*;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * This class is responsible for executing the core CI build steps.
@@ -10,6 +14,9 @@ import java.nio.file.*;
  * The result of the build is returned as a boolean value.
  */
 public class BuildExecutor {
+
+    // Stores the build id of the most recent build (used for linking logs in the CI server).
+    private volatile String lastBuildId = null;
 
     /**
      * Runs the CI build for a given repository and branch.
@@ -25,10 +32,18 @@ public class BuildExecutor {
         Path tempDirectory = Files.createTempDirectory("ci-build-");
         System.out.println("[CI] Workspace: " + tempDirectory);
 
+        // Create a unique build id and prepare a log file for it.
+        // The log is stored at: builds/<buildId>/log.txt
+        lastBuildId = Long.toString(System.currentTimeMillis());
+        Path buildLogDir = Path.of("builds", lastBuildId);
+        Files.createDirectories(buildLogDir);
+        Path buildLogPath = buildLogDir.resolve("log.txt");
+
         // 2. Clone the repository into the temp directory.
         runCommand(
                 new String[]{"git", "clone", cloneUrl},
-                tempDirectory.toFile()
+                tempDirectory.toFile(),
+                buildLogPath
         );
 
         // 3. After cloning, find the repository directory.
@@ -41,18 +56,42 @@ public class BuildExecutor {
         // 4. Checkout the requested branch.
         runCommand(
                 new String[]{"git", "checkout", branch},
-                repoDir
+                repoDir,
+                buildLogPath
         );
+
 
         // 5. Run Maven tests.
         // Maven returns exit code 0 on success, non-zero on failure.
+        String mvnCmd;
+        if (Files.exists(repoDir.toPath().resolve(isWindows() ? "mvnw.cmd" : "mvnw"))) {
+            mvnCmd = isWindows() ? "mvnw.cmd" : "./mvnw";
+        } else {
+            mvnCmd = isWindows() ? "mvn.cmd" : "mvn";
+        }
+
         int exitCode = runCommand(
-                new String[]{"mvn", "test"},
-                repoDir
+                new String[]{mvnCmd, "test"},
+                repoDir,
+                buildLogPath
         );
 
         // Return true only if the build was successful.
         return exitCode == 0;
+    }
+
+    /**
+     * Returns the build id of the most recent build.
+     * The corresponding log is available at: builds/<buildId>/log.txt
+     *
+     * @return last build id, or null if no build has been executed yet
+     */
+    public String getLastBuildId() {
+        return lastBuildId;
+    }
+
+    private boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("win");
     }
 
     /**
@@ -62,11 +101,12 @@ public class BuildExecutor {
      *
      * @param cmd command and arguments (e.g. {"git", "clone", url})
      * @param dir working directory where the command is executed
+     * @param logFile file where build output is appended (builds/<buildId>/log.txt)
      * @return the exit code of the process
      * @throws IOException if the process cannot be started
      * @throws InterruptedException if the process is interrupted
      */
-    private int runCommand(String[] cmd, File dir)
+    private int runCommand(String[] cmd, File dir, Path logFile)
             throws IOException, InterruptedException {
 
         // Prepare the process builder with the given command.
@@ -87,11 +127,32 @@ public class BuildExecutor {
 
             String line;
             while ((line = r.readLine()) != null) {
-                System.out.println("[BUILD] " + line);
+                String out = "[BUILD] " + line;
+                System.out.println(out);
+                Files.writeString(logFile, out + System.lineSeparator(),
+                        java.nio.charset.StandardCharsets.UTF_8,
+                        java.nio.file.StandardOpenOption.CREATE,
+                        java.nio.file.StandardOpenOption.APPEND);
             }
         }
 
         // Wait for the process to finish and return its exit code.
-        return p.waitFor();
+        int exit = p.waitFor();
+        Files.writeString(logFile, "exitCode=" + exit + System.lineSeparator(),
+                java.nio.charset.StandardCharsets.UTF_8,
+                java.nio.file.StandardOpenOption.CREATE,
+                java.nio.file.StandardOpenOption.APPEND);
+        return exit;
+    }
+
+    // Backwards-compatible overload to keep existing behavior if needed elsewhere.
+    private int runCommand(String[] cmd, File dir)
+            throws IOException, InterruptedException {
+        Path fallbackLogDir = Path.of("builds", (lastBuildId == null ? "unknown" : lastBuildId));
+        try {
+            Files.createDirectories(fallbackLogDir);
+        } catch (IOException ignored) { }
+        Path fallbackLog = fallbackLogDir.resolve("log.txt");
+        return runCommand(cmd, dir, fallbackLog);
     }
 }

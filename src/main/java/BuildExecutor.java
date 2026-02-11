@@ -24,7 +24,7 @@ public class BuildExecutor {
      * @param cloneUrl URL of the GitHub repository to clone
      * @param branch   branch name to checkout
      * @return true if the Maven build succeeds, false otherwise
-     * @throws Exception
+     * @throws Exception if any system command (git/maven) fails or IO error occurs
      */
     public boolean runBuild(String cloneUrl, String branch) throws Exception {
         // 1. Create a temporary directory for this build.
@@ -82,7 +82,7 @@ public class BuildExecutor {
 
     /**
      * Returns the build id of the most recent build.
-     * The corresponding log is available at: builds/<buildId>/log.txt
+     * The corresponding log is available at: builds/{@code <buildId>}/log.txt
      *
      * @return last build id, or null if no build has been executed yet
      */

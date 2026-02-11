@@ -1,0 +1,48 @@
+[BUILD] Cloning into 'continuous-integration'...
+exitCode=0
+[BUILD] branch 'ReadMe/setup' set up to track 'origin/ReadMe/setup'.
+[BUILD] Switched to a new branch 'ReadMe/setup'
+exitCode=0
+[BUILD] [INFO] Scanning for projects...
+[BUILD] [INFO] 
+[BUILD] [INFO] ----------------< se.kth.dd2480:continuous-integration >----------------
+[BUILD] [INFO] Building continuous-integration 1.0-SNAPSHOT
+[BUILD] [INFO]   from pom.xml
+[BUILD] [INFO] --------------------------------[ jar ]---------------------------------
+[BUILD] [INFO] 
+[BUILD] [INFO] --- resources:3.3.1:resources (default-resources) @ continuous-integration ---
+[BUILD] [INFO] skip non existing resourceDirectory C:\Users\moham\AppData\Local\Temp\ci-build-13916374076965494466\continuous-integration\src\main\resources
+[BUILD] [INFO] 
+[BUILD] [INFO] --- compiler:3.11.0:compile (default-compile) @ continuous-integration ---
+[BUILD] [INFO] Changes detected - recompiling the module! :source
+[BUILD] [INFO] Compiling 3 source files with javac [debug target 11] to target\classes
+[BUILD] [WARNING] system modules path not set in conjunction with -source 11
+[BUILD] [INFO] 
+[BUILD] [INFO] --- resources:3.3.1:testResources (default-testResources) @ continuous-integration ---
+[BUILD] [INFO] skip non existing resourceDirectory C:\Users\moham\AppData\Local\Temp\ci-build-13916374076965494466\continuous-integration\src\test\resources
+[BUILD] [INFO] 
+[BUILD] [INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ continuous-integration ---
+[BUILD] [INFO] Changes detected - recompiling the module! :dependency
+[BUILD] [INFO] Compiling 1 source file with javac [debug target 11] to target\test-classes
+[BUILD] [WARNING] system modules path not set in conjunction with -source 11
+[BUILD] [INFO] 
+[BUILD] [INFO] --- surefire:3.2.5:test (default-test) @ continuous-integration ---
+[BUILD] [INFO] Using auto detected provider org.apache.maven.surefire.junit4.JUnit4Provider
+[BUILD] [INFO] 
+[BUILD] [INFO] -------------------------------------------------------
+[BUILD] [INFO]  T E S T S
+[BUILD] [INFO] -------------------------------------------------------
+[BUILD] [INFO] Running GitHubPayloadParserTest
+[BUILD] [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.281 s -- in GitHubPayloadParserTest
+[BUILD] [INFO] 
+[BUILD] [INFO] Results:
+[BUILD] [INFO] 
+[BUILD] [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[BUILD] [INFO] 
+[BUILD] [INFO] ------------------------------------------------------------------------
+[BUILD] [INFO] BUILD SUCCESS
+[BUILD] [INFO] ------------------------------------------------------------------------
+[BUILD] [INFO] Total time:  7.802 s
+[BUILD] [INFO] Finished at: 2026-02-11T11:31:57+01:00
+[BUILD] [INFO] ------------------------------------------------------------------------
+exitCode=0

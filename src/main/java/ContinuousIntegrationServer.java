@@ -122,7 +122,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             } else {
                 html.append("<ul>");
                 for (BuildMeta m : metas) {
-                    String icon = "success".equals(m.status) ? "✅" : "❌";
+                    String icon = "success".equals(m.status) ? "success" : "fail";
                     String shortSha = (m.commitSha == null) ? "" : m.commitSha.substring(0, Math.min(12, m.commitSha.length()));
                     html.append("<li>")
                             .append(icon).append(" ")

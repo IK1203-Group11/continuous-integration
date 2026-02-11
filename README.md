@@ -7,7 +7,7 @@ This project is a custom-built Continuous Integration (CI) server developed for 
 
 This project was built using a lightweight Java stack, centered around an embedded Jetty server for high performance and Jackson for efficient data handling.
 
-## Environment
+### Environment
 * **Runtime:** Java JDK 17 (LTS)
 * **Build Tool:** Maven 
 
@@ -77,11 +77,9 @@ Set Content type to application/json.
 
 Click Add webhook.
 
----
 
-## How to run the program 
-
-
+### 5. Persistant logs 
+The persistance log can be found in the following link : https://flukeless-horacio-unhawked.ngrok-free.dev/builds 
 
 
 
@@ -91,21 +89,27 @@ Click Add webhook.
 
 This section details how the server fulfills the core requirements for compilation and automated testing as defined in the project assessment.
 
-### Core CI Feature #1 - Compilation
+### 1. Core CI Feature - Compilation
 * **Implementation**: The server identifies the push event and extracts the branch name and clone URL using `GitHubPayloadParser.java`. 
 * **Workspace Isolation**: To ensure a clean build environment, the server creates an isolated temporary directory for every build using `Files.createTempDirectory`.
 * **Execution**: The `BuildExecutor.java` uses `ProcessBuilder` to execute `git clone` and `git checkout` on the specified branch. It then executes `mvn test`, which implicitly performs a compilation and static syntax check of the Java 17 source code.
 * **Trigger**: The process is triggered via a GitHub Webhook configured to send a POST request to the `ContinuousIntegrationServer.java`.
 * **Verification**: The grader can observe the compilation progress in the server console, as all process output is redirected to `System.out` via a `BufferedReader`.
 
-### Core CI Feature #2 - Testing
-* **Implementation**: Once the project is cloned and checked out, `BuildExecutor.java` invokes the command `mvn test`.
-* **Automated Feedback**: The server captures the exit code of the Maven process using `p.waitFor()`. An exit code of `0` indicates success, while any other value (such as a failed test assertion) is interpreted as a failure.
+### 2. Core CI Feature - Testing
+* **Implementation**: Once the project is cloned and checked out, `BuildExecutor.java` invokes the command `mvn test` which both compiles and tests the demo project.
+* **Automated Feedback**: The server captures the exit code of the Maven process using `p.waitFor()`. An exit code of `0` indicates success, while any other value (such as a failed test assertion) is interpreted as a failure. We are therfore able to capture error in both the test as well as any compilation failures.
 * **Assessment Strategy**: To verify this, the grader can change an assertion oracle in the `assessment` branch. The CI server will detect the failure via the exit code and print "Tests failed" to the console.
 * **Internal Testing**: The parsing logic in `GitHubPayloadParser.java` and the command execution logic in `BuildExecutor.java` are themselves unit-tested to ensure the CI server operates reliably.
 
-### Core CI Feature #3 - Notification
+### 3. Core CI Feature - Notification
 
+* **Implementation**: The server utilizes the `GitHubStatusNotifier.java` class to communicate build results back to GitHub via the REST API.
+* **Authentication**: The system authenticates requests using a Personal Access Token (PAT) stored in the `GITHUB_TOKEN` environment variable.
+* **Feedback Loop**: Upon completion of the build and test process, the server sends a POST request to GitHub's statuses endpoint (`/repos/{owner}/{repo}/statuses/{sha}`).
+* **State Mapping**: The server maps the build outcome to GitHub states: a successful Maven execution results in a `"success"` status, while a failed execution or test assertion sends a `"failure"` status.
+* **Deep Linking (Details Link)**: If a `CI_PUBLIC_URL` is configured, the notification includes a `target_url` that creates a "Details" button in the GitHub UI.
+* **Log Accessibility**: Clicking "Details" redirects the developer to the CI server's log endpoint (`/build/<buildId>`), allowing for immediate inspection of build logs.
 
 ---
 
@@ -113,7 +117,7 @@ This section details how the server fulfills the core requirements for compilati
 
 
 
---- 
+---
 
 
 ## Contribution 
@@ -126,8 +130,6 @@ This section details how the server fulfills the core requirements for compilati
 | **Yusuf** | `yusufcanekin` | Automation | Built the `ProcessBuilder` logic to automate `git clone`, `git checkout`, and `mvn test` execution. |
 | **Jafar** | `sund02` | Notification | Implemented the GitHub Commit Status REST API to send Success/Failure results back to the repo. |
 | **Dawa** | `Dawacode`| Quality & SEMAT | Managed Javadoc generation, project licensing, README maintenance, and the SEMAT Team evaluation. |
-
----
 
 
 

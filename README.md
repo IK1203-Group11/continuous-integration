@@ -123,6 +123,13 @@ mvn compile exec:java
 * **Persistent logs**:
 The persistence log can be found in the following link : https://flukeless-horacio-unhawked.ngrok-free.dev/builds 
 
+* **Metric and Health Monitoring**:
+We implemented a real-time metrics and health monitoring system for the CI server. Metrics include total builds, successful/failed builds, average build duration, and success/failure rates. Health is automatically reported as "OK" or "UNHEALTHY" if the failure rate exceeds 50%.
+
+- **Metrics page** (HTML): [http://localhost:8080/metrics](http://localhost:8080/metrics)  
+- **Health page** (JSON): [http://localhost:8080/health](http://localhost:8080/health)
+
+This feature centralizes metric logic in `MetricsService` and keeps route handlers clean, making it a feaature that provides insight into build performance and server health.
 ---
 
 
@@ -184,14 +191,12 @@ mvn javadoc:javadoc
 
 | Team member | GitHub username | Responsibility | Tasks |
 | :--- | :--- | :--- | :--- |
-| **Dawa** | `Dawacode` & `41w1`| Initial integration | Set up GitHub Webhooks, ngrok tunnel, initial repo structure and initial Jetty server request handling. Create ReadMe instructions on how to setup the environment |
-| **Amanda** | `Amanda-zakir` | Logic and Test | Developed `dummy.java` and core application logic for the demo and its subsequent tests. |
-| **Edvin** | `Edvin-Livak` & `Livak` |  Parser | Implemented JSON parsing to extract branch info and commit SHAs and created the test for the parsing. |
+| **Dawa** | `Dawacode` & `41w1` | Initial integration | Set up GitHub Webhooks, ngrok tunnel, initial repo structure and initial Jetty server request handling.<br>Create ReadMe instructions on how to setup the environment |
+| **Amanda** | `Amanda-zakir` | Logic and Test | **CI Metrics and Health Monitoring** (`MetricsService`, `/metrics` and `/health` endpoints) as a P+ remarkable feature.<br>Developed `dummy.java` and core application logic for the demo and its subsequent tests. | 
+| **Edvin** | `Edvin-Livak` & `Livak` | Parser | Implemented JSON parsing to extract branch info and commit SHAs and created the test for the parsing. |
 | **Yusuf** | `yusufcanekin` | Automation | Built the `ProcessBuilder` logic to automate `git clone`, `git checkout`, and `mvn test` execution. |
-| **Jafar** | `sund02` & `Jafar`| Notification | Implemented the GitHub Commit Status REST API to send Success/Failure results back to the repo. |
-| **Dawa** | `Dawacode` & `41w1`| Quality & SEMAT | Managed Javadoc generation, project licensing, README maintenance, and the SEMAT Team evaluation. |
-
-
+| **Jafar** | `sund02` & `Jafar` | Notification | Implemented the GitHub Commit Status REST API to send Success/Failure results back to the repo. |
+|
 
 ---
 

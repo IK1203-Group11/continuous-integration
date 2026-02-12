@@ -257,6 +257,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             Instant startedAt = Instant.now();
 
             // Run the tests on related branch and produce the result of tests.
+            // We also record metrics about the build execution (success/failure, duration) in the MetricsService.
             BuildExecutor executor = new BuildExecutor(metricsService);
             boolean result = executor.runBuild(trigger.cloneUrl, trigger.branch);
             System.out.println(result ? "Tests passed." : "Tests failed.");

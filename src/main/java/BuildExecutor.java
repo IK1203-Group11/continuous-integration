@@ -17,16 +17,26 @@ public class BuildExecutor {
 
     // Stores the build id of the most recent build (used for linking logs in the CI server).
     private volatile String lastBuildId = null;
+    // Reference to the MetricsService to record build metrics after each build.
     private final MetricsService metricsService;
     
+    // Constructor that accepts a MetricsService instance for recording build metrics.  
     public BuildExecutor(MetricsService metricsService) {
         this.metricsService = metricsService;
     }
 
+    /**
+     * Runs the CI build for a given repository and branch, while recording metrics about the build execution.  
+     * @param cloneURL
+     * @param branch
+     * @return
+     * @throws Exception
+     */
     public boolean runBuild(String cloneURL, String branch) throws Exception {
         long startTime = System.currentTimeMillis();
         boolean success;
 
+        // Run the build and catch any exceptions to ensure metrics are recorded even if the build fails unexpectedly.
         try {
             success = runBuildInterval(cloneURL, branch);
         } catch (Exception e) {
@@ -38,6 +48,7 @@ public class BuildExecutor {
             throw e;
 
         }
+        // Record the build result and duration in the MetricsService after the build completes.
         long buildEndTime = System.currentTimeMillis();
         metricsService.recordBuild(success,
             (int)(buildEndTime - startTime),

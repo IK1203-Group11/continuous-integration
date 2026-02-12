@@ -17,7 +17,33 @@ public class BuildExecutor {
 
     // Stores the build id of the most recent build (used for linking logs in the CI server).
     private volatile String lastBuildId = null;
+    private final MetricsService metricsService;
+    
+    public BuildExecutor(MetricsService metricsService) {
+        this.metricsService = metricsService;
+    }
 
+    public boolean runBuild(String cloneURL, String branch) throws Exception {
+        long startTime = System.currentTimeMillis();
+        boolean success;
+
+        try {
+            success = runBuildInterval(cloneURL, branch);
+        } catch (Exception e) {
+            success = false;
+            long buildEndTime = System.currentTimeMillis();
+            metricsService.recordBuild(false, 
+                (int)(buildEndTime - startTime),
+                (int) buildEndTime);
+            throw e;
+
+        }
+        long buildEndTime = System.currentTimeMillis();
+        metricsService.recordBuild(success,
+            (int)(buildEndTime - startTime),
+            (int) buildEndTime);
+        return success;
+    }
     /**
      * Runs the CI build for a given repository and branch.
      *
@@ -26,7 +52,7 @@ public class BuildExecutor {
      * @return true if the Maven build succeeds, false otherwise
      * @throws Exception if any system command (git/maven) fails or IO error occurs
      */
-    public boolean runBuild(String cloneUrl, String branch) throws Exception {
+    public boolean runBuildInterval(String cloneUrl, String branch) throws Exception {
         // 1. Create a temporary directory for this build.
         // Each build runs in its own isolated workspace.
         Path tempDirectory = Files.createTempDirectory("ci-build-");

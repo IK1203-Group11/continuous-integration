@@ -146,8 +146,9 @@ mvn javadoc:javadoc
 | **Amanda** | `Amanda-zakir` | Logic and Test | Developed `dummy.java` and core application logic for the demo and its subsequent tests. |
 | **Edvin** | `Edvin-Livak` |  Parser | Implemented JSON parsing to extract branch info and commit SHAs and created the test for the parsing. |
 | **Yusuf** | `yusufcanekin` | Automation | Built the `ProcessBuilder` logic to automate `git clone`, `git checkout`, and `mvn test` execution. |
-| **Jafar** | `sund02` | Notification | Implemented the GitHub Commit Status REST API to send Success/Failure results back to the repo. |
+| **Jafar** | `sund02` | Notification | Implemented the GitHub Commit Status REST API to send Success/Failure results back to the repo; created PR and issue templates; implemented webhook signature verification (HMAC SHA-256); and implemented persistent build log history with build listing and per-build log URLs. |
 | **Dawa** | `Dawacode`| Quality & SEMAT | Managed Javadoc generation, project licensing, README maintenance, and the SEMAT Team evaluation. |
+
 
 
 

@@ -17,9 +17,17 @@ import org.eclipse.jetty.server.Request;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-
+/**
+ * Test class for testing the handle() function in ContinuousIntegrationServer.java.
+ * Contains two tests that use the mock oject from Mockito.
+ */
 public class ContinuousIntegrationServerTest {
     
+    /**
+     * Asserts that in the event that the handle() function receives a Ping request,
+     * it should respond with "Pong (ping received)" and code 200.
+     * @throws Exception 
+     */
     @Test
     public void pingEvent_ReturnsPongAnd200() throws Exception {
         ContinuousIntegrationServer server = new ContinuousIntegrationServer();
@@ -45,6 +53,11 @@ public class ContinuousIntegrationServerTest {
         assertTrue(sw.toString().contains("Pong (ping received)"));
     }
 
+    /**
+     * Asserts that in the event that the handle() function receives an invalid payload,
+     * it should return error code 400 and a expected failur message.
+     * @throws Exception
+     */
     @Test
     public void postPushWithInvalidPayload_Returns400() throws Exception {
         ContinuousIntegrationServer server = new ContinuousIntegrationServer();

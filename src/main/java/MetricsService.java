@@ -1,3 +1,9 @@
+/**
+ * P7: Remarkable feature - CI Metrics and Health Endpoints
+ * GET /metrics -> HTML page showing total builds, sucessful builds, failed builds,
+ * average build duration, sucess rate, failure rate, and timestamp of last build.          
+ * GET /health -> JSON endpoints showing "status": "OK" or "UNHEALTHY" (if failure rate > 50%)  
+ */
 public class MetricsService{
     private int totalBuilds = 0;
     private int sucessfulBuilds = 0;

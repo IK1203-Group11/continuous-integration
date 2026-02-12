@@ -146,6 +146,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             response.getWriter().println(html.toString());
             return;
         }
+        //P7: Remarkable feature - CI Metrics and Health Endpoints
         if ("GET".equalsIgnoreCase(request.getMethod()) && "/metrics".equals(target)) {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_OK);

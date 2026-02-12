@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ContinuousIntegrationServer extends AbstractHandler {
     private final GitHubPayloadParser payloadParser = new GitHubPayloadParser();
-    
+
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static final MetricsService metricsService = new MetricsService();
@@ -34,7 +34,6 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         return metricsService;
     }
 
-    
     // We persist build metadata to disk so that history survives server restarts.
     // Each build writes:
     //   builds/<buildId>/meta.json  (commit, branch, timestamps, status, log URL)
@@ -91,14 +90,28 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     }
 
     /**
-     * Called when a request is received.
+     * Handles all incoming HTTP requests to the CI server.
      *
-     * Reads the JSON payload from the request body, checks the event type (push, ping, etc.)
-     * If it's a PUSH event, parses the JSON to extract branch name, commit SHA and clone URL.
-     * .
-     * .
-     * .
-     * PERFORMS CI TASKS
+     * This method acts as the central entry point for:
+     *   - GitHub webhook events (POST requests)
+     *   - Build history endpoint (GET /builds)
+     *   - Individual build log retrieval (GET /build/{buildId})
+     *
+     * Behavior:
+     *   - GET /builds: Returns a persistent list of all builds.
+     *   - GET /build/{id}: Returns the stored log for a specific build.
+     *   - POST (ping event): Responds with HTTP 200 and "Pong (ping received)".
+     *   - POST (push event): Triggers the CI build pipeline, stores metadata,
+     *     updates GitHub commit status, and returns HTTP 200.
+     *   - Any non-POST webhook request results in HTTP 405.
+     *
+     * @param target       The request target path (e.g., "/builds", "/build/{id}")
+     * @param baseRequest  Jetty's base request object (must be marked handled)
+     * @param request      The HTTP request object
+     * @param response     The HTTP response object
+     *
+     * @throws IOException        If an I/O error occurs during processing
+     * @throws ServletException   If request handling fails at servlet level
      */
     public void handle(String target,
                        Request baseRequest,
@@ -146,7 +159,8 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             response.getWriter().println(html.toString());
             return;
         }
-        //P7: Remarkable feature - CI Metrics and Health Endpoints
+
+        //P7: CI Metrics and Health Endpoints
         if ("GET".equalsIgnoreCase(request.getMethod()) && "/metrics".equals(target)) {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_OK);
@@ -164,8 +178,9 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             html.append("</body></html>");
 
             response.getWriter().println(html.toString());
+            return;
         }
-        
+
         if ("GET".equalsIgnoreCase(request.getMethod()) && "/health".equals(target)) {
             response.setContentType("text/plain;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_OK);
@@ -177,20 +192,20 @@ public class ContinuousIntegrationServer extends AbstractHandler {
                 healthy = false;
 
             }
-            response.setStatus(healthy ? 
-                HttpServletResponse.SC_OK : HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            response.setStatus(healthy ?
+                    HttpServletResponse.SC_OK : HttpServletResponse.SC_SERVICE_UNAVAILABLE);
 
             String json = String.format(
-                "{\n" +
-                "  \"status\": \"%s\",\n" +
-                "  \"uptimeSeconds\": %.0f,\n" +
-                "  \"lastBuildTimestamp\": %d\n" +
-                "}",
-                healthy ? "OK" : "UNHEALTHY",
-                java.lang.management.ManagementFactory
-                    .getRuntimeMXBean()
-                    .getUptime() / 1000.0,
-                metricsService.getLastBuildTimeStamp()
+                    "{\n" +
+                            "  \"status\": \"%s\",\n" +
+                            "  \"uptimeSeconds\": %.0f,\n" +
+                            "  \"lastBuildTimestamp\": %d\n" +
+                            "}",
+                    healthy ? "OK" : "UNHEALTHY",
+                    java.lang.management.ManagementFactory
+                            .getRuntimeMXBean()
+                            .getUptime() / 1000.0,
+                    metricsService.getLastBuildTimeStamp()
             );
             response.getWriter().println(json);
             return;
@@ -228,6 +243,17 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
         // Read JSON payload from request body.
         String body = request.getReader().lines().collect(Collectors.joining("\n"));
+
+        // Verify webhook signature (security): reject spoofed requests before doing any work.
+        String secret = System.getenv("GITHUB_WEBHOOK_SECRET");
+        String sig256 = request.getHeader("X-Hub-Signature-256");
+
+        // Strict mode: if secret is not set OR signature is invalid -> reject.
+        if (secret == null || secret.isBlank() || !GitHubWebhookVerifier.verify(body, sig256, secret)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().println("Invalid webhook signature");
+            return;
+        }
 
         // Check what type of event (push, ping, etc.)
         String event = request.getHeader("X-GitHub-Event");

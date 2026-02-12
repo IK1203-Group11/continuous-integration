@@ -17,16 +17,42 @@ public class BuildExecutor {
 
     // Stores the build id of the most recent build (used for linking logs in the CI server).
     private volatile String lastBuildId = null;
+
     // Reference to the MetricsService to record build metrics after each build.
     private final MetricsService metricsService;
-    
-    // Constructor that accepts a MetricsService instance for recording build metrics.  
+
+    // base directory for builds (log storage)
+    private final Path buildsBaseDir;
+
+    /**
+     * Creates a BuildExecutor using the default "builds" directory
+     * as the base location for storing build logs.
+     *
+     * This constructor is used in production by the CI server.
+     *
+     * @param metricsService MetricsService instance used to record build metrics
+     */
     public BuildExecutor(MetricsService metricsService) {
-        this.metricsService = metricsService;
+        this(metricsService, Path.of("builds"));
     }
 
     /**
-     * Runs the CI build for a given repository and branch, while recording metrics about the build execution.  
+     * Creates a BuildExecutor with a custom base directory
+     * for storing build logs.
+     *
+     * This constructor is primarily intended for testing,
+     * allowing isolation from the production "builds" directory.
+     *
+     * @param metricsService MetricsService instance used to record build metrics
+     * @param buildsBaseDir the base directory where build logs will be written
+     */
+    public BuildExecutor(MetricsService metricsService, Path buildsBaseDir) {
+        this.metricsService = metricsService;
+        this.buildsBaseDir = buildsBaseDir;
+    }
+
+    /**
+     * Runs the CI build for a given repository and branch, while recording metrics about the build execution.
      * @param cloneURL
      * @param branch
      * @return
@@ -42,19 +68,20 @@ public class BuildExecutor {
         } catch (Exception e) {
             success = false;
             long buildEndTime = System.currentTimeMillis();
-            metricsService.recordBuild(false, 
-                (int)(buildEndTime - startTime),
-                (int) buildEndTime);
+            metricsService.recordBuild(false,
+                    (int) (buildEndTime - startTime),
+                    (int) buildEndTime);
             throw e;
 
         }
         // Record the build result and duration in the MetricsService after the build completes.
         long buildEndTime = System.currentTimeMillis();
         metricsService.recordBuild(success,
-            (int)(buildEndTime - startTime),
-            (int) buildEndTime);
+                (int) (buildEndTime - startTime),
+                (int) buildEndTime);
         return success;
     }
+
     /**
      * Runs the CI build for a given repository and branch.
      *
@@ -66,14 +93,17 @@ public class BuildExecutor {
     public boolean runBuildInterval(String cloneUrl, String branch) throws Exception {
         // 1. Create a temporary directory for this build.
         // Each build runs in its own isolated workspace.
-        Path tempDirectory = Files.createTempDirectory("ci-build-");
+        Path tempDirectory = createWorkspace();
         System.out.println("[CI] Workspace: " + tempDirectory);
 
         // Create a unique build id and prepare a log file for it.
         // The log is stored at: builds/<buildId>/log.txt
         lastBuildId = Long.toString(System.currentTimeMillis());
-        Path buildLogDir = Path.of("builds", lastBuildId);
+
+        // use injected base directory
+        Path buildLogDir = buildsBaseDir.resolve(lastBuildId);
         Files.createDirectories(buildLogDir);
+
         Path buildLogPath = buildLogDir.resolve("log.txt");
 
         // 2. Clone the repository into the temp directory.
@@ -84,11 +114,7 @@ public class BuildExecutor {
         );
 
         // 3. After cloning, find the repository directory.
-        File[] dirs = tempDirectory.toFile().listFiles(File::isDirectory);
-        if (dirs == null || dirs.length == 0) {
-            throw new RuntimeException("Repository directory not found after clone");
-        }
-        File repoDir = dirs[0];
+        File repoDir = resolveRepositoryDirectory(tempDirectory);
 
         // 4. Checkout the requested branch.
         runCommand(
@@ -96,7 +122,6 @@ public class BuildExecutor {
                 repoDir,
                 buildLogPath
         );
-
 
         // 5. Run Maven tests.
         // Maven returns exit code 0 on success, non-zero on failure.
@@ -143,7 +168,7 @@ public class BuildExecutor {
      * @throws IOException if the process cannot be started
      * @throws InterruptedException if the process is interrupted
      */
-    private int runCommand(String[] cmd, File dir, Path logFile)
+    protected int runCommand(String[] cmd, File dir, Path logFile)
             throws IOException, InterruptedException {
 
         // Prepare the process builder with the given command.
@@ -183,13 +208,31 @@ public class BuildExecutor {
     }
 
     // Backwards-compatible overload to keep existing behavior if needed elsewhere.
-    private int runCommand(String[] cmd, File dir)
+    protected int runCommand(String[] cmd, File dir)
             throws IOException, InterruptedException {
-        Path fallbackLogDir = Path.of("builds", (lastBuildId == null ? "unknown" : lastBuildId));
+
+        Path fallbackLogDir = buildsBaseDir.resolve(
+                lastBuildId == null ? "unknown" : lastBuildId
+        );
+
         try {
             Files.createDirectories(fallbackLogDir);
         } catch (IOException ignored) { }
+
         Path fallbackLog = fallbackLogDir.resolve("log.txt");
         return runCommand(cmd, dir, fallbackLog);
     }
+
+    protected Path createWorkspace() throws IOException {
+        return Files.createTempDirectory("ci-build-");
+    }
+
+    protected File resolveRepositoryDirectory(Path workspace) {
+        File[] dirs = workspace.toFile().listFiles(File::isDirectory);
+        if (dirs == null || dirs.length == 0) {
+            throw new RuntimeException("Repository directory not found after clone");
+        }
+        return dirs[0];
+    }
+
 }

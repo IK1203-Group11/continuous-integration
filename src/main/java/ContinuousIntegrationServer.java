@@ -28,6 +28,12 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    private static final MetricsService metricsService = new MetricsService();
+
+    public static MetricsService getMetricsService() {
+        return metricsService;
+    }
+
     
     // We persist build metadata to disk so that history survives server restarts.
     // Each build writes:
@@ -140,7 +146,55 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             response.getWriter().println(html.toString());
             return;
         }
+        if ("GET".equalsIgnoreCase(request.getMethod()) && "/metrics".equals(target)) {
+            response.setContentType("text/html;charset=utf-8");
+            response.setStatus(HttpServletResponse.SC_OK);
+            baseRequest.setHandled(true);
+
+            StringBuilder html = new StringBuilder();
+            html.append("<html><head><title>Metrics</title></head><body>");
+            html.append("<h2>Metrics</h2>");
+            html.append("<p>Total builds: ").append(metricsService.getTotalBuilds()).append("</p>");
+            html.append("<p>Successful builds: ").append(metricsService.getSucessfulBuilds()).append("</p>");
+            html.append("<p>Failed builds: ").append(metricsService.getFailedBuilds()).append("</p>");
+            html.append("<p>Average build duration (ms): ").append(metricsService.getAvgBuildDuration()).append("</p>");
+            html.append("<p>Success rate: ").append(metricsService.getSuccessRate()).append("%</p>");
+            html.append("<p>Failure rate: ").append(metricsService.getFailureRate()).append("%</p>");
+            html.append("</body></html>");
+
+            response.getWriter().println(html.toString());
+        }
         
+        if ("GET".equalsIgnoreCase(request.getMethod()) && "/health".equals(target)) {
+            response.setContentType("text/plain;charset=utf-8");
+            response.setStatus(HttpServletResponse.SC_OK);
+            baseRequest.setHandled(true);
+
+            boolean healthy = true;
+
+            if (metricsService.getTotalBuilds() > 0 && metricsService.getFailureRate() > 50.0) {
+                healthy = false;
+
+            }
+            response.setStatus(healthy ? 
+                HttpServletResponse.SC_OK : HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+
+            String json = String.format(
+                "{\n" +
+                "  \"status\": \"%s\",\n" +
+                "  \"uptimeSeconds\": %.0f,\n" +
+                "  \"lastBuildTimestamp\": %d\n" +
+                "}",
+                healthy ? "OK" : "UNHEALTHY",
+                java.lang.management.ManagementFactory
+                    .getRuntimeMXBean()
+                    .getUptime() / 1000.0,
+                metricsService.getLastBuildTimeStamp()
+            );
+            response.getWriter().println(json);
+            return;
+        }
+
         // Log endpoint for GitHub "Details" link:
         // When the commit status includes a target_url like https://<public-url>/build/<buildId>,
         // GitHub will open that URL when the user clicks "Details".

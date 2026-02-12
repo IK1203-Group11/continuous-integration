@@ -17,7 +17,18 @@ public class BuildExecutor {
 
     // Stores the build id of the most recent build (used for linking logs in the CI server).
     private volatile String lastBuildId = null;
+    // NEW: base directory for builds
+    private final Path buildsBaseDir;
 
+    // Production constructor (default behavior unchanged)
+    public BuildExecutor() {
+        this(Path.of("builds"));
+    }
+
+    // Test constructor (allows isolated directory)
+    public BuildExecutor(Path buildsBaseDir) {
+        this.buildsBaseDir = buildsBaseDir;
+    }
     /**
      * Runs the CI build for a given repository and branch.
      *
@@ -35,8 +46,11 @@ public class BuildExecutor {
         // Create a unique build id and prepare a log file for it.
         // The log is stored at: builds/<buildId>/log.txt
         lastBuildId = Long.toString(System.currentTimeMillis());
-        Path buildLogDir = Path.of("builds", lastBuildId);
+
+        // use injected base directory
+        Path buildLogDir = buildsBaseDir.resolve(lastBuildId);
         Files.createDirectories(buildLogDir);
+
         Path buildLogPath = buildLogDir.resolve("log.txt");
 
         // 2. Clone the repository into the temp directory.
@@ -144,10 +158,15 @@ public class BuildExecutor {
     // Backwards-compatible overload to keep existing behavior if needed elsewhere.
     protected int runCommand(String[] cmd, File dir)
             throws IOException, InterruptedException {
-        Path fallbackLogDir = Path.of("builds", (lastBuildId == null ? "unknown" : lastBuildId));
+
+        Path fallbackLogDir = buildsBaseDir.resolve(
+                lastBuildId == null ? "unknown" : lastBuildId
+        );
+
         try {
             Files.createDirectories(fallbackLogDir);
         } catch (IOException ignored) { }
+
         Path fallbackLog = fallbackLogDir.resolve("log.txt");
         return runCommand(cmd, dir, fallbackLog);
     }

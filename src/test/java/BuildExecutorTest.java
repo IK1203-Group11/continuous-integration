@@ -1,10 +1,9 @@
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Files;
 
@@ -14,11 +13,15 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class BuildExecutorTest {
 
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
+
     private BuildExecutor executor;
 
     @Before
-    public void setUp() {
-        executor = spy(new BuildExecutor());
+    public void setUp() throws Exception {
+        Path testBuildsDir = tempFolder.newFolder("builds").toPath();
+        executor = spy(new BuildExecutor(testBuildsDir));
     }
 
     @Test
@@ -40,7 +43,8 @@ public class BuildExecutorTest {
         );
 
         assertTrue(result);
-        assertNotNull(executor.getLastBuildId());
+
+        assertTrue(tempFolder.getRoot().listFiles().length > 0);
     }
 
     @Test

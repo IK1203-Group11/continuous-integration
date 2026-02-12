@@ -1,10 +1,3 @@
-import org.junit.Test;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -14,14 +7,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for testing the handle() function in ContinuousIntegrationServer.java.
  * Contains two tests that use the mock oject from Mockito.
  */
 public class ContinuousIntegrationServerTest {
+
+    private static BufferedReader readerOf(String body) {
+        return new BufferedReader(new StringReader(body));
+    }
+
+    private static String sig256(String secret, String body) {
+        return "sha256=" + GitHubWebhookVerifier.hmacSha256Hex(secret, body);
+    }
     
     /**
      * Asserts that in the event that the handle() function receives a Ping request,
@@ -44,7 +48,14 @@ public class ContinuousIntegrationServerTest {
         // Stub request values
         when(req.getMethod()).thenReturn("POST");
         when(req.getHeader("X-GitHub-Event")).thenReturn("ping");
-        when(req.getReader()).thenReturn(new BufferedReader(new StringReader("{}")));
+
+        // Read JSON payload from request body.
+        String body = "{}";
+        when(req.getReader()).thenReturn(readerOf(body));
+
+        // Add valid webhook signature header (required after signature enforcement)
+        String secret = System.getenv("GITHUB_WEBHOOK_SECRET");
+        when(req.getHeader("X-Hub-Signature-256")).thenReturn(sig256(secret, body));
 
         // Call handle: pass req as both baseRequest and request
         server.handle("/", req, req, resp);
@@ -74,7 +85,12 @@ public class ContinuousIntegrationServerTest {
         when(request.getHeader("X-GitHub-Event")).thenReturn("push");
 
         // Invalid push payload: missing ref/after/repository.clone_url --> parser throws exception
-        when(request.getReader()).thenReturn(new BufferedReader(new StringReader("{\"repository\":{}}")));
+        String body = "{\"repository\":{}}";
+        when(request.getReader()).thenReturn(readerOf(body));
+
+        // Add valid webhook signature header (required after signature enforcement)
+        String secret = System.getenv("GITHUB_WEBHOOK_SECRET");
+        when(request.getHeader("X-Hub-Signature-256")).thenReturn(sig256(secret, body));
 
         // Act
         server.handle("/", baseRequest, request, response);

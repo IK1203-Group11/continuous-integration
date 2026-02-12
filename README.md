@@ -1,5 +1,11 @@
-# Continous integration 
+# Continuous integration 
 This project is a custom-built Continuous Integration (CI) server developed for the DD2480 Software Engineering course at KTH Royal Institute of Technology. The server automates the build process by listening for GitHub webhooks, triggering automated compilation and testing upon every push. It provides immediate feedback to developers by updating commit statuses directly on GitHub.
+
+---
+
+## Test repository
+This is the repository that has our dummy project : https://github.com/IK1203-Group11/demo-for-ci 
+It will be the repository which the user commits to in order to trigger the CI pipeline. 
 
 ---
 
@@ -9,7 +15,7 @@ This project was built using a lightweight Java stack, centered around an embedd
 
 ### Environment
 * **Runtime:** Java JDK 17 (LTS)
-* **Build Tool:** Maven 
+* **Build Tool:** Maven 3.9.12
 
 ### Core Dependencies
 * **Web Server:** [Jetty Server/Servlet](https://www.eclipse.org/jetty/) (v${jetty.version}) - Used as the embedded container.
@@ -62,7 +68,7 @@ ngrok http 8080
 ```
 
 
-### 4. Setup the webbhook
+### 4. Setup the webhook
 Copy the Forwarding URL from your ngrok terminal (e.g., https://xxxx.ngrok-free.dev).
 
 
@@ -77,13 +83,15 @@ Set Content type to application/json.
 
 Click Add webhook.
 
+---
 
-### 5. Persistant logs 
-The persistance log can be found in the following link : https://flukeless-horacio-unhawked.ngrok-free.dev/builds 
+## P+ features 
 
-
+* **Persistent logs**:
+The persistence log can be found in the following link : https://flukeless-horacio-unhawked.ngrok-free.dev/builds 
 
 ---
+
 
 ## Core CI Features Implementation 
 
@@ -98,7 +106,7 @@ This section details how the server fulfills the core requirements for compilati
 
 ### 2. Core CI Feature - Testing
 * **Implementation**: Once the project is cloned and checked out, `BuildExecutor.java` invokes the command `mvn test` which both compiles and tests the demo project.
-* **Automated Feedback**: The server captures the exit code of the Maven process using `p.waitFor()`. An exit code of `0` indicates success, while any other value (such as a failed test assertion) is interpreted as a failure. We are therfore able to capture error in both the test as well as any compilation failures.
+* **Automated Feedback**: The server captures the exit code of the Maven process using `p.waitFor()`. An exit code of `0` indicates success, while any other value (such as a failed test assertion) is interpreted as a failure. We are therefore able to capture error in both the test as well as any compilation failures.
 * **Assessment Strategy**: To verify this, the grader can change an assertion oracle in the `assessment` branch. The CI server will detect the failure via the exit code and print "Tests failed" to the console.
 * **Internal Testing**: The parsing logic in `GitHubPayloadParser.java` and the command execution logic in `BuildExecutor.java` are themselves unit-tested to ensure the CI server operates reliably.
 
@@ -137,27 +145,29 @@ mvn javadoc:javadoc
 * **Location**: The generated HTML files are stored in the target/site/apidocs/ directory. 
 * **Entry Point**: Open index.html in any web browser to explore the class hierarchies, method descriptions, and parameter requirements. 
 
+---
 
 ## Contribution 
 
 | Team member | GitHub username | Responsibility | Tasks |
 | :--- | :--- | :--- | :--- |
-| **Dawa** | `Dawacode` | Initial integration | Set up GitHub Webhooks, ngrok tunnel, initial repo structure and initial Jetty server request handling. Create ReadMe instructions on how to setup the environment |
+| **Dawa** | `Dawacode` & `41w1`| Initial integration | Set up GitHub Webhooks, ngrok tunnel, initial repo structure and initial Jetty server request handling. Create ReadMe instructions on how to setup the environment |
 | **Amanda** | `Amanda-zakir` | Logic and Test | Developed `dummy.java` and core application logic for the demo and its subsequent tests. |
-| **Edvin** | `Edvin-Livak` |  Parser | Implemented JSON parsing to extract branch info and commit SHAs and created the test for the parsing. |
+| **Edvin** | `Edvin-Livak` & `Livak` |  Parser | Implemented JSON parsing to extract branch info and commit SHAs and created the test for the parsing. |
 | **Yusuf** | `yusufcanekin` | Automation | Built the `ProcessBuilder` logic to automate `git clone`, `git checkout`, and `mvn test` execution. |
-| **Jafar** | `sund02` | Notification | Implemented the GitHub Commit Status REST API to send Success/Failure results back to the repo. |
-| **Dawa** | `Dawacode`| Quality & SEMAT | Managed Javadoc generation, project licensing, README maintenance, and the SEMAT Team evaluation. |
+| **Jafar** | `sund02` & `Jafar`| Notification | Implemented the GitHub Commit Status REST API to send Success/Failure results back to the repo. |
+| **Dawa** | `Dawacode` & `41w1`| Quality & SEMAT | Managed Javadoc generation, project licensing, README maintenance, and the SEMAT Team evaluation. |
 
 
 
 ---
 
 ## Essence evaluation 
+Our team has officially reached the Collaborating state. Having completed the project and delivered all final requirements, we have fulfilled the team mission defined in the Seeded phase. We worked through the Seeded and Formed state by holding initial meetings where we lay the groundwork for the work distribution as well as group commitment. 
 
-Our team has reached the Adjourned state. Having successfully completed the project and delivered all final requirements, we have fulfilled the team mission defined in the Seeded phase and handed over all responsibilities, satisfying the primary criteria for this final state. We worked through the Seeded and Formed state by holding initial meetings where we lay the ground work for the work distribution as well as group commitment. 
-We effectively transitioned from the Collaborating state through the Performing state by consistently having checkups on work progress and meeting commitments and addressing technical hurdles without external help. 
-All team members have now completed their individual tasks. There are no remaining obstacles to reaching a further state, as Adjourned is the final stage of the Team alpha. However, the final step in our process is a formal retrospective to archive the "lessons learned" before we officially cease all effort on this specific mission.
+Communication within the team is characterized by openness and honesty, allowing us to address technical hurdles and dependencies fluidly. We are no longer just a collection of individuals; we are a synchronized team focused entirely on achieving our mission. Mutual trust is high, and every member is fully committed to the collective goals and the working agreements we’ve established."
+
+All team members have now completed their individual tasks. While some of the points of the next states checklist have been reached such as the team adressing probelms and discussing among themself, not enough time has been spent working on the project in order to have multiple meetings.
 
 --- 
 

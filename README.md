@@ -130,6 +130,14 @@ We implemented a real-time metrics and health monitoring system for the CI serve
 
 This feature centralizes metric logic in `MetricsService` and keeps route handlers clean, making it a feaature that provides insight into build performance and server health.
 
+* **Webhook Signature Verification**:
+To enhance security, the server implements cryptographic verification of incoming GitHub payloads.
+    * **Implementation**: The `GitHubWebhookVerifier.java` class computes a HMAC SHA-256 hash of the request body using a shared secret (`GITHUB_WEBHOOK_SECRET`).
+    * **Security**: It performs a timing-safe comparison using `MessageDigest.isEqual` to prevent side-channel attacks.
+    * **Verification**: Any request missing a valid `X-Hub-Signature-256` header or failing the signature check is automatically rejected by the server.
+
+
+
 ---
 ## Core CI Features Implementation 
 

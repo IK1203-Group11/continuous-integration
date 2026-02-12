@@ -25,10 +25,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ContinuousIntegrationServer extends AbstractHandler {
     private final GitHubPayloadParser payloadParser = new GitHubPayloadParser();
-    
+
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    
+
     // We persist build metadata to disk so that history survives server restarts.
     // Each build writes:
     //   builds/<buildId>/meta.json  (commit, branch, timestamps, status, log URL)
@@ -85,14 +85,28 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     }
 
     /**
-     * Called when a request is received.
+     * Handles all incoming HTTP requests to the CI server.
      *
-     * Reads the JSON payload from the request body, checks the event type (push, ping, etc.)
-     * If it's a PUSH event, parses the JSON to extract branch name, commit SHA and clone URL.
-     * .
-     * .
-     * .
-     * PERFORMS CI TASKS
+     * This method acts as the central entry point for:
+     *   - GitHub webhook events (POST requests)
+     *   - Build history endpoint (GET /builds)
+     *   - Individual build log retrieval (GET /build/{buildId})
+     *
+     * Behavior:
+     *   - GET /builds: Returns a persistent list of all builds.
+     *   - GET /build/{id}: Returns the stored log for a specific build.
+     *   - POST (ping event): Responds with HTTP 200 and "Pong (ping received)".
+     *   - POST (push event): Triggers the CI build pipeline, stores metadata,
+     *     updates GitHub commit status, and returns HTTP 200.
+     *   - Any non-POST webhook request results in HTTP 405.
+     *
+     * @param target       The request target path (e.g., "/builds", "/build/{id}")
+     * @param baseRequest  Jetty's base request object (must be marked handled)
+     * @param request      The HTTP request object
+     * @param response     The HTTP response object
+     *
+     * @throws IOException        If an I/O error occurs during processing
+     * @throws ServletException   If request handling fails at servlet level
      */
     public void handle(String target,
                        Request baseRequest,
@@ -140,7 +154,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             response.getWriter().println(html.toString());
             return;
         }
-        
+
         // Log endpoint for GitHub "Details" link:
         // When the commit status includes a target_url like https://<public-url>/build/<buildId>,
         // GitHub will open that URL when the user clicks "Details".

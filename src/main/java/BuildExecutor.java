@@ -20,15 +20,30 @@ public class BuildExecutor {
     // NEW: base directory for builds
     private final Path buildsBaseDir;
 
-    // Production constructor (default behavior unchanged)
+    /**
+     * Creates a BuildExecutor using the default "builds" directory
+     * as the base location for storing build logs.
+     *
+     * This constructor is used in production by the CI server.
+     */
     public BuildExecutor() {
         this(Path.of("builds"));
     }
 
-    // Test constructor (allows isolated directory)
+    /**
+     * Creates a BuildExecutor with a custom base directory
+     * for storing build logs.
+     *
+     * This constructor is primarily intended for testing,
+     * allowing isolation from the production "builds" directory.
+     *
+     * @param buildsBaseDir the base directory where build logs will be written
+     */
     public BuildExecutor(Path buildsBaseDir) {
         this.buildsBaseDir = buildsBaseDir;
     }
+
+
     /**
      * Runs the CI build for a given repository and branch.
      *

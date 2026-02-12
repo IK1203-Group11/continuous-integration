@@ -22,21 +22,48 @@ This project was built using a lightweight Java stack, centered around an embedd
 * **Servlet API:** [Java Servlet API](https://javaee.github.io/servlet-spec/) (v3.1.0) - Standard interface for web components.
 * **JSON Processor:** [Jackson Databind](https://github.com/FasterXML/jackson) (v2.17.1) - Handles data binding and JSON serialization.
 
+
+
 ### Development & Testing
 * **Testing Framework:** [JUnit 4](https://junit.org/junit4/) (v4.13.2) - Utilized for unit testing and ensuring code reliability during the Performing state.
+
+
+---
+
+## Project Structure
+
+```text
+.
+├── .github/
+│   ├── ISSUE_TEMPLATE/           # Templates for standardized bug and feature reports
+│   │   ├── bug_report.md
+│   │   └── feature_request.md
+│   └── pull_request_template.md      # Standard template for all Pull Requests
+├── src/
+│   ├── main/java/                # Core CI Server implementation
+│   │   ├── BuildExecutor.java
+│   │   ├── ContinuousIntegrationServer.java
+│   │   ├── GitHubPayloadParser.java
+│   │   ├── GitHubStatusNotifier.java
+│   │   └── GitHubWebhookVerifier.java
+│   └── test/java/                # Unit and integration test suites
+│       ├── BuildExecutorTest.java
+│       ├── ContinuousIntegrationServerTest.java
+│       ├── GitHubPayloadParserTest.java
+│       ├── GitHubStatusNotifierTest.java
+│       └── GitHubWebhookVerifierTest.java
+├── builds/                       # Local storage for build history and logs
+├── .gitignore                    # Files and directories for Git to ignore
+├── LICENSE                       # Project licensing information
+├── pom.xml                       # Maven Project Object Model and dependencies
+└── README.md                     # Project documentation
+```
 
 ---
 ## CI Server Setup
 
 
-### 1. Start the Server
-Compile and launch the Java Jetty server:
-```bash
-mvn compile exec:java
-```
-
-
-### 2. Install ngrok
+### 1. Install ngrok
 To bridge the gap between GitHub and your local Mac (the "Cloud Server" from our plan), you need to install ngrok. This tool creates a secure tunnel to your local port :
 ```bash
 brew install ngrok/ngrok/ngrok
@@ -45,7 +72,7 @@ brew install ngrok/ngrok/ngrok
 ```
 
 
-### 3. Authenticate your Account
+### 2. Authenticate your Account
 Before you can use the tunnel, you must link your local installation to your ngrok account.
 Create a ngrok account if you dont already have one. Replace <YOUR_TOKEN_HERE> with the token from your ngrok dashboard:
 ```bash
@@ -57,7 +84,7 @@ ngrok config add-authtoken <YOUR_TOKEN_HERE>
 ```
 
 
-### 4. Launch your tunnel
+### 3. Launch your tunnel
 Finally, start the tunnel to make your local server visible to the internet:
 ```bash
 
@@ -67,21 +94,27 @@ ngrok http 8080
 
 ```
 
+### 4. Environment Configuration
+Before starting the CI server, you must set your secrets as environment variables. This allows the server to authenticate with GitHub and verify incoming webhooks.
 
-### 4. Setup the webhook
-Copy the Forwarding URL from your ngrok terminal (e.g., https://xxxx.ngrok-free.dev).
+```bash
+# 1. Generate a token at: GitHub Settings > Developer Settings > Personal access tokens > Tokens (classic)
+# Required scopes: 'repo:status'
+export GITHUB_TOKEN=YOUR_TOKEN_HERE
 
+# 2. Create any string (e.g., 'mysecret') to use for webhook verification
+export GITHUB_WEBHOOK_SECRET=mysecret
 
-Go to your GitHub repository: Settings > Webhooks > Add webhook.
+# 3. Set the public ngrok URL (Copy the Forwarding URL from your ngrok terminal (e.g., https://xxxx.ngrok-free.dev).)
+export CI_PUBLIC_URL=https://xxxx.ngrok-free.dev/
 
+```
 
-Paste the URL into the Payload URL field.
-
-
-Set Content type to application/json.
-
-
-Click Add webhook.
+### 5. Start the Server
+Compile and launch the Java Jetty server:
+```bash
+mvn compile exec:java
+```
 
 ---
 

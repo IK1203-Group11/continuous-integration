@@ -23,10 +23,9 @@ This project was built using a lightweight Java stack, centered around an embedd
 * **JSON Processor:** [Jackson Databind](https://github.com/FasterXML/jackson) (v2.17.1) - Handles data binding and JSON serialization.
 
 
-
 ### Development & Testing
 * **Testing Framework:** [JUnit 4](https://junit.org/junit4/) (v4.13.2) - Utilized for unit testing and ensuring code reliability during the Performing state.
-
+* **Mocking Framework:** [Mockito](https://site.mockito.org/) (v5.11.0) - Used for creating mock objects in unit tests to isolate behavior.
 
 ---
 
@@ -126,13 +125,12 @@ The persistence log can be found in the following link : https://flukeless-horac
 * **Metric and Health Monitoring**:
 We implemented a real-time metrics and health monitoring system for the CI server. Metrics include total builds, successful/failed builds, average build duration, and success/failure rates. Health is automatically reported as "OK" or "UNHEALTHY" if the failure rate exceeds 50%.
 
-- **Metrics page** (HTML): [http://localhost:8080/metrics](http://localhost:8080/metrics)  
-- **Health page** (JSON): [http://localhost:8080/health](http://localhost:8080/health)
+* **Metrics page** (HTML): [http://localhost:8080/metrics](http://localhost:8080/metrics)  
+* **Health page** (JSON): [http://localhost:8080/health](http://localhost:8080/health)
 
 This feature centralizes metric logic in `MetricsService` and keeps route handlers clean, making it a feaature that provides insight into build performance and server health.
+
 ---
-
-
 ## Core CI Features Implementation 
 
 This section details how the server fulfills the core requirements for compilation and automated testing as defined in the project assessment.

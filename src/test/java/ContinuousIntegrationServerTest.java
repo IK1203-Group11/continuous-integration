@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -18,7 +20,11 @@ import static org.mockito.Mockito.when;
  * Contains two tests that use the mock oject from Mockito.
  */
 public class ContinuousIntegrationServerTest {
-
+    private static final String TEST_SECRET = "test-secret";
+    @BeforeClass
+    public static void setSecret() {
+        System.setProperty("GITHUB_WEBHOOK_SECRET", TEST_SECRET);
+    }
     private static BufferedReader readerOf(String body) {
         return new BufferedReader(new StringReader(body));
     }
@@ -55,7 +61,7 @@ public class ContinuousIntegrationServerTest {
 
         // Add valid webhook signature header (required after signature enforcement)
         String secret = System.getenv("GITHUB_WEBHOOK_SECRET");
-        when(req.getHeader("X-Hub-Signature-256")).thenReturn(sig256(secret, body));
+        when(req.getHeader("X-Hub-Signature-256")).thenReturn(sig256(TEST_SECRET, body));
 
         // Call handle: pass req as both baseRequest and request
         server.handle("/", req, req, resp);
@@ -89,7 +95,7 @@ public class ContinuousIntegrationServerTest {
         when(request.getReader()).thenReturn(readerOf(body));
 
         // Add valid webhook signature header (required after signature enforcement)
-        String secret = System.getenv("GITHUB_WEBHOOK_SECRET");
+        String secret = System.getProperty("GITHUB_WEBHOOK_SECRET", System.getenv("GITHUB_WEBHOOK_SECRET"));
         when(request.getHeader("X-Hub-Signature-256")).thenReturn(sig256(secret, body));
 
         // Act

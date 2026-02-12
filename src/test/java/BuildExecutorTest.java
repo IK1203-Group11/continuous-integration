@@ -24,6 +24,18 @@ public class BuildExecutorTest {
         executor = spy(new BuildExecutor(testBuildsDir));
     }
 
+    /**
+     * Asserts that when all CI steps (clone, checkout, mvn test)
+     * return exit code 0, the runBuild() method:
+     *
+     *  - returns true
+     *  - generates a buildId
+     *  - creates a build directory inside the configured builds base directory
+     *
+     * This verifies the success-path contract of the CI execution flow.
+     *
+     * @throws Exception if unexpected internal error occurs
+     */
     @Test
     public void shouldReturnTrueWhenAllCommandsSucceed() throws Exception {
 
@@ -47,6 +59,15 @@ public class BuildExecutorTest {
         assertTrue(tempFolder.getRoot().listFiles().length > 0);
     }
 
+    /**
+     * Asserts that if the Maven test step returns a non-zero exit code,
+     * runBuild() must return false.
+     *
+     * This verifies that build failure is correctly propagated
+     * from the command execution layer to the public API.
+     *
+     * @throws Exception if unexpected internal error occurs
+     */
     @Test
     public void shouldReturnFalseWhenMavenFails() throws Exception {
 

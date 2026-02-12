@@ -174,6 +174,17 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         // Read JSON payload from request body.
         String body = request.getReader().lines().collect(Collectors.joining("\n"));
 
+        // Verify webhook signature (security): reject spoofed requests before doing any work.
+        String secret = System.getenv("GITHUB_WEBHOOK_SECRET");
+        String sig256 = request.getHeader("X-Hub-Signature-256");
+
+        // Strict mode: if secret is not set OR signature is invalid -> reject.
+        if (secret == null || secret.isBlank() || !GitHubWebhookVerifier.verify(body, sig256, secret)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().println("Invalid webhook signature");
+            return;
+        }
+
         // Check what type of event (push, ping, etc.)
         String event = request.getHeader("X-GitHub-Event");
         System.out.println("Received event: " + event);
